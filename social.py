@@ -51,20 +51,28 @@ users = {
 }
 
 def load(users):
-	output = open('data.pkl','wb')
+	output = open('data1.pkl','wb')
 	pickle.dump(users,output)
 	output.close()
-	unpack = open('data.pkl','rb')
+	unpack = open('data1.pkl','rb')
 	un = pickle.load(unpack)
 	unpack.close()
 	pack = pickle.dumps(un)
-	conn.set("use",pack)
+	conn.set("use1",pack)
 
 def unload():
 	# ans = conn.get("use")
 	# print ans
-	user= pickle.loads(conn.get("use"))
-	return user
+	choice = conn.get("use1")
+	if choice is not None:
+		user= pickle.loads(conn.get("use1"))
+		return user
+	else:
+		unpack = open('data1.pkl','rb')
+		un = pickle.load(unpack)
+		unpack.close()
+		pack = pickle.dumps(un)
+		conn.set("use1",pack)
 
 def likes(username):
 	print "Enter name of the user whose post you want to like "
@@ -216,13 +224,13 @@ def internPanel(users,username):
 						if "startup" in k3 and isinstance(v3,dict):
 							print "Internship opportunity for ==> ",k3
 							for k4,v4 in users[k][k2][k3].iteritems():
-								if k4 == "flag_intern" and v4 == 1:
-									for k5,v5 in users[k][k2][k3].iteritems():
-										if k5 == "skills" and v5:
-											print "Skills required are : ",v5	
-										elif k5 == "skills" and v5 is None:
-											print "Sorry ! No internship posted for this startup ! Keep Looking !"
-
+								if k4 == "flag_intern":
+									if v4 == 1:
+										for k5,v5 in users[k][k2][k3].iteritems():
+											if k5 == "skills" and v5:
+												print "Skills required are : ",v5	
+									else:
+										print "Sorry ! No internship posted for this startup ! Keep Looking !"
 	print "**************************************************"
 	print "Want to apply ? (1/0) "
 	ans = raw_input()
@@ -408,7 +416,7 @@ def signup():
 	print "Enter contact number :"
 	contact = input()
 	users=unload()
-	
+	# print users
 	
 	users.update({username:{}})
 	
