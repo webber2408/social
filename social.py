@@ -73,6 +73,8 @@ def unload():
 		unpack.close()
 		pack = pickle.dumps(un)
 		conn.set("use1",pack)
+		user= pickle.loads(conn.get("use1"))
+		return user
 
 def likes(username):
 	print "Enter name of the user whose post you want to like "
